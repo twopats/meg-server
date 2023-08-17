@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"io"
 	"net/http"
 
 	ai "meg-server/ai"
+	models "meg-server/models"
 
 	"context"
 
@@ -16,12 +18,21 @@ import (
 
 
 func Chat(c *gin.Context) {
+	// Get the OpenAI client
 	client := ai.GetClient()
 	ctx := context.Background()
+	
+	// Read the request body
+	b,bErr := io.ReadAll(c.Request.Body)
+	if bErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": bErr.Error() ,
+		})
 
-	reqContent := c.Query("content")
+		return
+	}
 
-	Messages :=[]openai.ChatCompletionMessage{{Role: openai.ChatMessageRoleUser, Content: reqContent}}
+	Messages :=[]openai.ChatCompletionMessage{{Role: openai.ChatMessageRoleUser, Content: string(b)}}
 
 
 	req := openai.ChatCompletionRequest{
@@ -42,10 +53,13 @@ func Chat(c *gin.Context) {
 	}
 	
 
+	// Format chat response object base on model
+	var ChatResponse = models.ChatResponse{
+		Message: resp.Choices[0].Message.Content,
+	}
+
 	// Respond with the message from OpenAI
-	c.JSON(http.StatusOK, gin.H{
-		"message": resp.Choices[0].Message.Content,
-	})
+	c.JSON(http.StatusOK, ChatResponse)
 
 
 }
