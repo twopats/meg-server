@@ -10,6 +10,7 @@ func SetupRouter() *gin.Engine {
  
   r.GET("/api/ping", controllers.Ping)
   r.POST("/api/chat", controllers.Chat)
+  r.GET("/api/ws-chat", controllers.WS_Chat)
 
   return r;
 
