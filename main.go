@@ -2,16 +2,25 @@ package main
 
 import (
 	"log"
-	"meg-server/controllers"
+	controllers "meg-server/controllers"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	_ "github.com/joho/godotenv/autoload"
 )
 
+var upgrader = websocket.Upgrader{
+ ReadBufferSize:  1024,
+ WriteBufferSize: 1024,
+}
+
 func main() {
-  // router
+
+
+
   r := gin.Default()
+
 
 
   port := os.Getenv("PORT")
