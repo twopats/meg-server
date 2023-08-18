@@ -12,6 +12,9 @@ type Config struct {
         Port string `envconfig:"SERVER_PORT"`
         Host string `envconfig:"SERVER_HOST"`
     }
+    External struct {
+        Image string `envconfig:"EXTERNAL_IMAGE_ENDPOINT"`
+    }
 }
 
 var cfg Config
